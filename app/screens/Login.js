@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, Image, TextInput } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../components/Button";
+import { auth, signInWithEmailAndPassword } from "../../firebase";
 
 function Login({ navigation }) {
-  const handleSubmit = ({ email, password }) => {};
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleSubmit = ({ email, password }) => {
+    signInWithEmailAndPassword(auth, email, password).catch((error) =>
+      alert(error)
+    );
+  };
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),

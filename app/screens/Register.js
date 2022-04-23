@@ -4,10 +4,23 @@ import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../components/Button";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "../../firebase";
 
 function Register({ navigation }) {
-  const handleSubmit = ({ email, password }) => {
-    alert(`welcome ${email}`);
+  const handleSubmit = ({ email, password, fullName }) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((authUser) => {
+        updateProfile(authUser.user, {
+          displayName: fullName,
+          photoURL:
+            "https://as1.ftcdn.net/v2/jpg/01/32/20/08/1000_F_132200844_AhtrAxCNIwQV7LxCw6be9CBrnZloB5lB.jpg",
+        });
+      })
+      .catch((error) => console.log(error.message));
   };
 
   const validationSchema = Yup.object().shape({
