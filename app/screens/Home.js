@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,14 +7,23 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  LogBox,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 
 import { auth, signOut } from "../../firebase";
 import AppListItem from "../components/AppListItem";
+import { getDocs, collection, db } from "../../firebase";
+
+LogBox.ignoreLogs([
+  "Setting a timer for a long period of time",
+  "AsyncStorage has been extracted from react-native core and will be removed in a future release",
+]);
 
 function Home({ navigation }) {
+  const [chats, setChats] = useState([]);
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -22,6 +31,19 @@ function Home({ navigation }) {
       })
       .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    const unsubscribe = getDocs(collection(db, "chats")).then((snapshot) => {
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+    return unsubscribe;
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: { backgroundColor: "#fff" },
@@ -61,8 +83,10 @@ function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <ScrollView>
-        <AppListItem />
+      <ScrollView style={{ marginTop: 5, height: "100%" }}>
+        {chats.map(({ id, data: { name } }) => (
+          <AppListItem key={id} id={id} chatName={name} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

@@ -13,6 +13,7 @@ const BaseNavigator = () => (
       headerTintColor: "white",
       headerTitleStyle: { color: "white" },
     }}
+    initialRouteName="Home"
   >
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="Register" component={Register} />
