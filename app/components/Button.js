@@ -5,7 +5,7 @@ function Button({ onPress, color, backgroundColor, marginBottom, text }) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={{ width: "100%", borderRadius: 20, marginBottom: marginBottom }}
+      style={{ width: "100%", borderRadius: 20, marginTop: marginBottom }}
     >
       <View
         style={{

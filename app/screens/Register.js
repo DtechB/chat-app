@@ -5,10 +5,13 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../components/Button";
 
-function Login({ navigation }) {
-  const handleSubmit = ({ email, password }) => {};
+function Register({ navigation }) {
+  const handleSubmit = ({ email, password }) => {
+    alert(`welcome ${email}`);
+  };
 
   const validationSchema = Yup.object().shape({
+    fullName: Yup.string().required().label("Name"),
     email: Yup.string().required().email().label("Email"),
     password: Yup.string().required().min(4).label("Password"),
   });
@@ -22,7 +25,7 @@ function Login({ navigation }) {
         style={{ width: 160, height: 160, borderRadius: 15, marginBottom: 20 }}
       />
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ fullName: "", email: "", password: "" }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
@@ -31,8 +34,16 @@ function Login({ navigation }) {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Full name"
                 autoFocus
+                onChangeText={handleChange("fullName")}
+              />
+              {errors.fullName && (
+                <Text style={{ color: "red" }}>{errors.fullName}</Text>
+              )}
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
                 onChangeText={handleChange("email")}
               />
               {errors.email && (
@@ -50,16 +61,16 @@ function Login({ navigation }) {
                 </Text>
               )}
               <Button
-                text="Login"
+                text="Register"
                 color="white"
                 backgroundColor="#2c6bed"
                 marginBottom={10}
                 onPress={handleSubmit}
               />
               <Button
-                text="Register"
+                text="Login"
                 color="#2c6bed"
-                onPress={() => navigation.navigate("Register")}
+                onPress={() => navigation.navigate("Login")}
               />
             </View>
           </>
@@ -85,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;
