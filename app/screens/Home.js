@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Avatar } from "react-native-elements";
+import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+
 import { auth, signOut } from "../../firebase";
 import AppListItem from "../components/AppListItem";
 
@@ -30,6 +32,27 @@ function Home({ navigation }) {
         <View style={{ marginLeft: 15 }}>
           <TouchableOpacity onPress={handleSignOut}>
             <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerRight: () => (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: 70,
+            alignItems: "center",
+            marginRight: 15,
+          }}
+        >
+          <TouchableOpacity activeOpacity={0.5}>
+            <AntDesign name="camerao" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate("AddChat")}
+          >
+            <SimpleLineIcons name="pencil" size={20} color="black" />
           </TouchableOpacity>
         </View>
       ),
