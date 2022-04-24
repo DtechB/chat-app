@@ -44,6 +44,10 @@ function Home({ navigation }) {
     return unsubscribe;
   }, []);
 
+  const handleEnterChat = (id, chatName) => {
+    navigation.navigate("Chat", { id, chatName });
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: { backgroundColor: "#fff" },
@@ -85,7 +89,12 @@ function Home({ navigation }) {
       <StatusBar />
       <ScrollView style={{ marginTop: 5, height: "100%" }}>
         {chats.map(({ id, data: { name } }) => (
-          <AppListItem key={id} id={id} chatName={name} />
+          <AppListItem
+            key={id}
+            id={id}
+            chatName={name}
+            enterChat={handleEnterChat}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>
