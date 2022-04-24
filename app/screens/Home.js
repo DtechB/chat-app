@@ -65,15 +65,12 @@ function Home({ navigation }) {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             width: 70,
             alignItems: "center",
             marginRight: 15,
           }}
         >
-          <TouchableOpacity activeOpacity={0.5}>
-            <AntDesign name="camerao" size={24} color="black" />
-          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={() => navigation.navigate("AddChat")}

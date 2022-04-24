@@ -6,9 +6,8 @@ function AppListItem({ id, chatName, enterChat }) {
   return (
     <ListItem onPress={() => enterChat(id, chatName)} key={id} bottomDivider>
       <Avatar
-        rounded
         source={{
-          uri: "https://atahlil.com/wp-content/uploads/2021/03/avatar-portrait-a-man-in-a-suit-vector-22999971.jpg",
+          uri: "https://i.pinimg.com/originals/2c/41/96/2c41967c1fff588f834fa8b86a2b3e91.png",
         }}
       />
       <ListItem.Content>
@@ -16,7 +15,7 @@ function AppListItem({ id, chatName, enterChat }) {
           {chatName}
         </ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
-          jdnjsvnjdvnskdjvnsv jsndvkjsdkvjsnd sdjnvdjsvndksdvjn
+          tap to show messages...
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
