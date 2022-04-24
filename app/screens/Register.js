@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, Image, TextInput } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import * as ImagePicker from "expo-image-picker";
+
 import Button from "../components/Button";
 import {
   auth,
@@ -11,12 +13,36 @@ import {
 } from "../../firebase";
 
 function Register({ navigation }) {
+  const [imguri, setImguri] = useState("");
+
+  const requestPermission = async () => {
+    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!granted) alert("you need to enable permissions");
+  };
+
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
+  const selectImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions,
+        quality: 0.5,
+      });
+      if (!result.cancelled) setImguri(result.uri);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = ({ email, password, fullName }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
         updateProfile(authUser.user, {
           displayName: fullName,
           photoURL:
+            imguri ||
             "https://as1.ftcdn.net/v2/jpg/01/32/20/08/1000_F_132200844_AhtrAxCNIwQV7LxCw6be9CBrnZloB5lB.jpg",
         });
       })
@@ -33,10 +59,22 @@ function Register({ navigation }) {
       <StatusBar style="light" />
       <Image
         source={{
-          uri: "https://www.technoknowledges.co/wp-content/uploads/2022/01/signal-app.png",
+          uri:
+            imguri ||
+            "https://www.technoknowledges.co/wp-content/uploads/2022/01/signal-app.png",
         }}
         style={{ width: 160, height: 160, borderRadius: 15, marginBottom: 20 }}
       />
+      <View style={{ width: 160 }}>
+        <Button
+          text="choose your avatar"
+          backgroundColor="#2c6bed"
+          color="white"
+          marginBottom={10}
+          onPress={selectImage}
+        />
+      </View>
+
       <Formik
         initialValues={{ fullName: "", email: "", password: "" }}
         onSubmit={handleSubmit}
