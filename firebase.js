@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  onSnapshot,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -46,4 +47,5 @@ export {
   serverTimestamp,
   query,
   orderBy,
+  onSnapshot,
 };

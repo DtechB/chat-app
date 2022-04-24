@@ -21,13 +21,14 @@ import {
   addDoc,
   query,
   orderBy,
-  getDocs,
+  onSnapshot,
 } from "../../firebase";
 import Message from "../components/Message";
 
 function Chat({ navigation, route }) {
   const [message, setMessage] = useState("");
   const [msgData, setMsgData] = useState([]);
+  const [all, setAll] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: route.params.chatName,
@@ -48,26 +49,23 @@ function Chat({ navigation, route }) {
     setMessage("");
   };
 
-  const unsubscribe = async () => {
+  const unsubscribe = () => {
     const docRef = collection(db, "chats", route.params.id, "messages");
     const q = query(docRef, orderBy("timeStamp"));
-    const querySnapshot = await getDocs(q);
     let temp = [];
-
-    querySnapshot.forEach((doc) => {
-      temp.push({ id: doc.id, data: doc.data() });
+    onSnapshot(q, (snapshot) => {
+      setMsgData(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
     });
-
-    setMsgData(temp);
   };
-
-  useLayoutEffect(() => {
-    unsubscribe();
-  }, [message]);
 
   useEffect(() => {
     unsubscribe();
-  }, []);
+  }, [route]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,19 +73,20 @@ function Chat({ navigation, route }) {
       <KeyboardAvoidingView keyboardVerticalOffset={90} style={{ flex: 1 }}>
         <>
           <ScrollView style={{ padding: 10 }}>
-            {msgData.map(({ id, data }) => (
-              <Message
-                key={id}
-                avatar={data.photoURL}
-                name={data.displayName}
-                message={data.message}
-                isSender={
-                  auth.currentUser.displayName === data.displayName
-                    ? true
-                    : false
-                }
-              />
-            ))}
+            {msgData &&
+              msgData.map(({ id, data }, index) => (
+                <Message
+                  key={index}
+                  avatar={data.photoURL}
+                  name={data.displayName}
+                  message={data.message}
+                  isSender={
+                    auth.currentUser.displayName === data.displayName
+                      ? true
+                      : false
+                  }
+                />
+              ))}
           </ScrollView>
           <View style={styles.footer}>
             <TextInput
